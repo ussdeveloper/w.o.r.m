@@ -1,0 +1,61 @@
+{
+  "name": "worm-universal-lang",
+  "version": "0.1.0",
+  "description": "Universal Language Interface - JavaScript-based language with unified API for C/C++, Go, Python libraries",
+  "main": "core/worm.js",
+  "scripts": {
+    "start": "node worm.js",
+    "test": "jest",
+    "dev": "nodemon worm.js",
+    "build": "npm run build:current",
+    "build:current": "pkg worm.js --output dist/worm",
+    "build:all": "npm run build:windows && npm run build:linux && npm run build:macos",
+    "build:windows": "pkg worm.js --target node18-win-x64 --output dist/worm-win.exe",
+    "build:linux": "pkg worm.js --target node18-linux-x64 --output dist/worm-linux",
+    "build:macos": "pkg worm.js --target node18-macos-x64 --output dist/worm-macos",
+    "build:container": "npm run build:all && npm run package:container",
+    "package:container": "node scripts/package-container.js",
+    "container:add": "node scripts/container-manager.js add",
+    "container:list": "node scripts/container-manager.js list",
+    "container:extract": "node scripts/container-manager.js extract"
+  },
+  "keywords": [
+    "universal",
+    "language",
+    "api",
+    "bridge",
+    "multi-language"
+  ],
+  "author": "WORM Team",
+  "license": "MIT",
+  "dependencies": {
+    "archiver": "^6.0.1",
+    "child_process": "^1.0.2",
+    "ffi-napi": "^4.0.3",
+    "fs-extra": "^11.2.0",
+    "node-addon-api": "^7.0.0",
+    "python-shell": "^5.0.0",
+    "yauzl": "^3.0.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "jest": "^29.0.0",
+    "nodemon": "^3.0.0",
+    "pkg": "^5.8.1"
+  },
+  "pkg": {
+    "assets": [
+      "core/**/*",
+      "adapters/**/*",
+      "examples/**/*",
+      "docs/**/*",
+      "container/**/*"
+    ],
+    "targets": [
+      "node18-win-x64",
+      "node18-linux-x64",
+      "node18-macos-x64"
+    ],
+    "outputPath": "dist"
+  }
+}

@@ -1,0 +1,15 @@
+
+worm.createContainer('InitalContainer',() => {
+  const container = document.createElement('div');
+  container.style.width = '200px';
+  container.style.height = '200px';
+  container.style.backgroundColor = 'lightblue';
+  container.style.display = 'flex';
+  container.style.justifyContent = 'center';
+  container.style.alignItems = 'center';
+  container.innerText = 'Hello, World!';
+  document.body.appendChild(container);
+  return container;
+}).mount(()=> {
+  console.log('Container has been mounted to the DOM');
+});

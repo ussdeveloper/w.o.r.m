@@ -1,0 +1,79 @@
+# Docker Compose for WORM development and deployment
+
+version: '3.8'
+
+services:
+  # WORM development environment
+  worm-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    container_name: worm-dev
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=development
+      - WORM_DEBUG=true
+    command: npm run dev
+
+  # WORM production runtime
+  worm-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: worm-prod
+    ports:
+      - "3000:8080"
+    environment:
+      - NODE_ENV=production
+      - WORM_EMBEDDED=true
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "./worm", "version"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # WORM with Python stack
+  worm-python:
+    build: 
+      context: .
+      dockerfile: Dockerfile.python
+    container_name: worm-python
+    volumes:
+      - ./data:/app/data
+    environment:
+      - PYTHONPATH=/app/python-libs
+    command: ["./worm", "interactive"]
+
+  # WORM with full development stack
+  worm-full:
+    build:
+      context: .
+      dockerfile: Dockerfile.full
+    container_name: worm-full
+    volumes:
+      - .:/app
+      - worm-cache:/app/cache
+    ports:
+      - "4000:8080"
+      - "9229:9229"  # Debug port
+    environment:
+      - NODE_ENV=development
+      - WORM_DEBUG=true
+      - WORM_PYTHON_PATH=/usr/bin/python3
+      - WORM_GO_PATH=/usr/local/go/bin/go
+    command: ["./worm", "interactive", "--debug"]
+
+volumes:
+  worm-cache:
+    driver: local
+
+networks:
+  default:
+    name: worm-network

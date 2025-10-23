@@ -1,0 +1,19 @@
+{
+  "name": "WORM Container",
+  "version": "1.0.0",
+  "description": "Embedded container for WORM Universal Language Interface",
+  "contents": {
+    "examples": "Example scripts demonstrating WORM capabilities",
+    "docs": "Documentation and API references",
+    "config": "Configuration files and templates",
+    "data": "Sample data files for testing and demos"
+  },
+  "features": [
+    "Embedded filesystem",
+    "Compression support", 
+    "Runtime extraction",
+    "Memory-mapped access"
+  ],
+  "created": "2025-10-23",
+  "platform": "universal"
+}
